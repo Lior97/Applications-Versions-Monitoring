@@ -1,0 +1,251 @@
+[ansible]
+repo = "ansible/ansible"
+version = "2.18.6"
+
+[kasm]
+repo = "kasmtech/kasm-install-wizard"
+version = "1.17.0"
+
+[caddy]
+repo = "caddyserver/caddy"
+version = "2.10.0"
+
+[chatwoot]
+repo = "chatwoot/chatwoot"
+version = "4.3.0"
+
+[clickhouse]
+repo = "ClickHouse/ClickHouse"
+version = "25.5.3.75"
+
+[cloudpanel]
+repo = "cloudpanel-io/cloudpanel-ce"
+version = "2.5.1"
+
+[cloudron]
+version = "8.3.1"
+version_url = "https://git.cloudron.io/platform/box/-/tags"
+
+[clustercontrol]
+version = "2.3.2"
+version_url = "https://www.severalnines.com/downloads/cmon/"
+
+[cyberpanel]
+repo = "usmannasir/cyberpanel"
+version = "1.9.1"
+
+[directus]
+repo = "directus/directus"
+version = "11.8.0"
+
+[django]
+repo = "django/django"
+version = "5.2.3"
+
+[docker]
+repo = "moby/moby"
+version = "28.2.2"
+
+[dokku]
+repo = "dokku/dokku"
+version = "0.35.20"
+
+[dokuwiki]
+repo = "splitbrain/dokuwiki"
+version = "56.1"
+
+[elasticsearch]
+repo = "elastic/elasticsearch"
+version = "9.0.2"
+
+[grafana]
+repo = "grafana/grafana"
+version = "12.0.2"
+
+[haproxy]
+repo = "haproxy/haproxy"
+version = "3.2.0"
+
+[harbor]
+repo = "goharbor/harbor"
+version = "2.13.1"
+
+[ispconfig]
+repo = "cyberkathosting/ispconfig3"
+version = "3.2.11"
+
+[jenkins]
+repo = "jenkinsci/jenkins"
+version = "2.426.2"
+
+[jitsi]
+repo = "jitsi/jitsi-meet"
+version = "2.0.10133"
+
+[joomla]
+repo = "joomla/joomla-cms"
+version = "3.9.24"
+
+[laravel]
+repo = "laravel/laravel"
+version = "12.0.8"
+
+[magento]
+repo = "magento/magento2"
+version = "2.4.7"
+
+[matomo]
+repo = "matomo-org/matomo"
+version = "5.3.1"
+
+[mattermost]
+repo = "mattermost/mattermost-server"
+version = "9.10.1"
+
+[mediawiki]
+repo = "wikimedia/mediawiki"
+version = "1.42.0"
+
+[memcached]
+repo = "memcached/memcached"
+version = "1.6.24"
+
+[minio]
+repo = "minio/cli"
+version = "1.24.2"
+
+[mongodb]
+repo = "mongodb/mongo"
+version = "4.4.29"
+
+[moodle]
+repo = "moodle/moodle"
+version = "4.4.2"
+
+[mysql]
+repo = "mysql/mysql-server"
+version = "8.0.41"
+
+[nextcloud]
+repo = "nextcloud/server"
+version = "31.0.2"
+
+[nfs]
+version = "2.6.4"
+version_url = "https://salsa.debian.org/kernel-team/nfs-utils/-/tags"
+
+[nginx]
+repo = "nginx/nginx"
+version = "1.24.0"
+
+[nodejs]
+repo = "nodejs/node"
+version = "24.14.0"
+
+[odoo]
+version = "17"
+version_url = "https://www.odoo.com/documentation/18.0/administration/supported_versions.html"
+
+[openproject]
+repo = "opf/openproject"
+version = "11.4.1"
+
+[openvpn]
+repo = "OpenVPN/openvpn"
+version = "2.14.2"
+
+[passbolt]
+repo = "passbolt/passbolt_api"
+version = "4.0.0"
+
+[php]
+repo = "php/php-src"
+version = "8.3"
+
+[phpbb]
+repo = "phpbb/phpbb"
+version = "3.3.3"
+
+[phpmyadmin]
+repo = "phpmyadmin/phpmyadmin"
+version = "5.2.0"
+
+[plesk]
+version = "18.0.68"
+version_url = "https://autoinstall.plesk.com/"
+
+[postgresql]
+version = "17.4"
+version_url = "https://www.postgresql.org/docs/release/"
+
+[prometheus]
+repo = "prometheus/prometheus"
+version = "2.54.0"
+
+[pureftpd]
+repo = "jedisct1/pure-ftpd"
+version = "1.0.50"
+
+[python]
+repo = "python/cpython"
+version = "3.12"
+
+[rabbitmq]
+repo = "rabbitmq/rabbitmq-server"
+version = "3.12.1"
+
+[rancher]
+repo = "rancher/rancher"
+version = "2.6.2"
+
+[redis]
+repo = "redis/redis"
+version = "7.0.15"
+
+[redmine]
+repo = "redmine/redmine"
+version = "5.1.3"
+
+[rocketchat]
+repo = "RocketChat/Rocket.Chat"
+version = "18.16.0"
+
+[rubyonrails]
+repo = "rails/rails"
+version = "7.2.2"
+
+[tomcat]
+repo = "apache/tomcat"
+version = "10.1.16"
+
+[traefik]
+repo = "traefik/traefik"
+version = "3.1.7"
+
+[uptimekuma]
+repo = "louislam/uptime-kuma"
+version = "1.23.16"
+
+[vesta]
+repo = "serghey-rodin/vesta"
+version = "1.0.0-5"
+
+[webmin]
+repo = "webmin/webmin"
+version = "2.303"
+
+[wordpress]
+repo = "WordPress/WordPress"
+version = "6.7.2"
+
+[zabbix]
+repo = "zabbix/zabbix"
+version = "7.0.11"
+
+[zentyal]
+repo = "zentyal/zentyal"
+version = "7.0.0"
+
+[zulip]
+repo = "zulip/zulip"
+version = "10.1"

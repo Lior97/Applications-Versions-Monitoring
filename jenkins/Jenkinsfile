@@ -1,0 +1,181 @@
+// Define the compareVersions function outside the pipeline block
+def compareVersions(String currentVersion, String latestVersion) {
+    // Handle "Unknown" versions
+    if (currentVersion == "Unknown" || latestVersion == "Unknown") {
+        return false // Treat unknown versions as not comparable
+    }
+    
+    // Split versions into components (e.g., "1.2.3" -> ["1", "2", "3"])
+    def currentParts = currentVersion.tokenize('.').collect { it.isNumber() ? it.toInteger() : 0 }
+    def latestParts = latestVersion.tokenize('.').collect { it.isNumber() ? it.toInteger() : 0 }
+    
+    // Pad shorter version with zeros for comparison
+    def maxLength = Math.max(currentParts.size(), latestParts.size())
+    while (currentParts.size() < maxLength) {
+        currentParts << 0
+    }
+    while (latestParts.size() < maxLength) {
+        latestParts << 0
+    }
+    
+    // Compare each part
+    for (int i = 0; i < maxLength; i++) {
+        if (currentParts[i] > latestParts[i]) {
+            return true // Current version is greater
+        } else if (currentParts[i] < latestParts[i]) {
+            return false // Current version is less
+        }
+    }
+    return true // Versions are equal
+}
+
+pipeline {
+    agent { label "Images" }
+    
+    environment {
+        VERSION_CHECK = "versions_check.py" 
+        OUTPUT_CSV = "versions-monitoring/outdated.csv"
+    }
+    
+    parameters {
+        choice(name: 'TYPE', choices: ['APPS', 'OS', 'CWM'], description: 'Type of version check to perform')
+    }
+    
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        
+        stage('Cloning Repo') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    dir('versions-monitoring') {
+                        git branch: 'main', changelog: false, credentialsId: 'Git-rndbot', poll: false, url: 'https://git.cloudwm-dev.com/DevOps/versions-monitoring.git'
+                    }
+                    echo "Repositories cloned successfully into their directories!"
+                }
+            }
+        }
+        
+        stage('Version Check') {
+            steps {
+                dir('versions-monitoring') {
+                    withCredentials([string(credentialsId: 'github-token2', variable: 'GITHUB_TOKEN')]) {
+                        script {
+                            echo "Running versions checks on ${params.TYPE}"
+                            sh "python3 ${env.VERSION_CHECK} --type ${params.TYPE} --github-token ${GITHUB_TOKEN}"
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Check Outdated Versions') {
+            steps {
+                script {
+                    def csvExists = fileExists("${env.OUTPUT_CSV}")
+                    if (csvExists) {
+                        def lineCount = sh(script: "wc -l < ${env.OUTPUT_CSV}", returnStdout: true).trim().toInteger()
+                        if (lineCount > 1) {
+                            def csvContent = readFile("${env.OUTPUT_CSV}").trim()
+                            def lines = csvContent.split('\n').findAll { it.trim() }
+                            if (lines.size() > 0) {
+                                def headers = lines[0].split(',').collect { it.trim() }
+                                def rows = []
+                                if (lines.size() > 1) {
+                                    lines[1..-1].each { line ->
+                                        def cols = line.split(',').collect { it.trim() }
+                                        if (cols.size() >= 3) {
+                                            rows << cols[0..2]
+                                        }
+                                    }
+                                }
+                                
+                                def message
+                                if (rows.size() > 0) {
+                                    def table = "| ${headers.join(' | ')} | Status |\n"
+                                    table += "| ${headers.collect { '-' * it.length() }.join(' | ')} | ------ |\n"
+                                    rows.each { row ->
+                                        def os = row[0]
+                                        def currentVersion = row[1]
+                                        def latestVersion = row[2]
+                                        // Check if currentVersion >= latestVersion
+                                        def status = compareVersions(currentVersion, latestVersion) ? "🟢" : "🔴"
+                                        table += "| ${os} | ${currentVersion} | ${latestVersion} | ${status} |\n"
+                                    }
+                                    message = "New versions detected for ${params.TYPE}:\n\n${table}"
+                                } else {
+                                    message = "New versions detected for ${params.TYPE}:\n\n| ${headers.join(' | ')} | Status |\n| ${headers.collect { '-' * it.length() }.join(' | ')} | ------ |\n| No version mismatches detected in CSV | N/A |\n"
+                                }
+                                
+                                echo "Triggering Zulip notification: ${message}"
+                                build wait: false, 
+                                      propagate: false, 
+                                      job: 'Utilities/Zuliip-Notification', 
+                                      parameters: [
+                                          string(name: 'TOPIC', value: 'Version Updates'),
+                                          string(name: 'STREAM', value: 'Jenkins'),
+                                          string(name: 'MESSAGE', value: message)
+                                      ], 
+                                      waitForStart: false
+                            } else {
+                                def headers = ['OS', 'Current Version', 'Latest Version']
+                                message = "New versions detected for ${params.TYPE}:\n\n| ${headers.join(' | ')} | Status |\n| ${headers.collect { '-' * it.length() }.join(' | ')} | ------ |\n| No valid CSV content found | N/A |\n"
+                                echo "Triggering Zulip notification: ${message}"
+                                build wait: false, 
+                                      propagate: false, 
+                                      job: 'Utilities/Zuliip-Notification', 
+                                      parameters: [
+                                          string(name: 'TOPIC', value: 'Version Updates'),
+                                          string(name: 'STREAM', value: 'Jenkins'),
+                                          string(name: 'MESSAGE', value: message)
+                                      ], 
+                                      waitForStart: false
+                            }
+                        } else {
+                            def headers = ['OS', 'Current Version', 'Latest Version']
+                            message = "New versions detected for ${params.TYPE}:\n\n| ${headers.join(' | ')} | Status |\n| ${headers.collect { '-' * it.length() }.join(' | ')} | ------ |\n| No version mismatches detected in CSV | N/A |\n"
+                            echo "Triggering Zulip notification: ${message}"
+                            build wait: false, 
+                                  propagate: false, 
+                                  job: 'Utilities/Zuliip-Notification', 
+                                  parameters: [
+                                      string(name: 'TOPIC', value: 'Version Updates'),
+                                      string(name: 'STREAM', value: 'Jenkins'),
+                                      string(name: 'MESSAGE', value: message)
+                                  ], 
+                                  waitForStart: false
+                        }
+                    } else {
+                        def message = "No versions to report for ${params.TYPE}:\n\n| OS | Current Version | Latest Version | Status |\n| -- | --------------- | --------------- | ------ |\n| No CSV file generated | N/A | N/A | N/A |\n"
+                        echo "Triggering Zulip notification: ${message}"
+                        build wait: false, 
+                              propagate: false, 
+                              job: 'Utilities/Zuliip-Notification', 
+                              parameters: [
+                                  string(name: 'TOPIC', value: 'Version Updates'),
+                                  string(name: 'STREAM', value: 'Jenkins'),
+                                  string(name: 'MESSAGE', value: message)
+                              ], 
+                              waitForStart: false
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            archiveArtifacts artifacts: "${env.OUTPUT_CSV}", allowEmptyArchive: true
+            echo "Artifact archived: ${env.OUTPUT_CSV}"
+        }
+        success {
+            echo "Version check executed successfully."
+        }
+        failure {
+            echo "Pipeline failed. Please check the logs."
+        }
+    }
+}

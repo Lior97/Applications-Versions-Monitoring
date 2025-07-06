@@ -1,0 +1,43 @@
+[windows-server]
+version = "2025"
+version_url = "https://endoflife.date/windows-server"
+
+[windows-desktop]
+version = "11"
+version_url = "https://endoflife.date/windows"
+
+[archlinux]
+version = "6.14.4"
+repo = "archlinux/linux"
+
+[ubuntu]
+version = "24.04"
+version_url = "https://ubuntu.com/about/release-cycle"
+
+[debian]
+version = "12.11.0"
+version_url = "https://www.debian.org/distrib/"
+
+[centos]
+version = "10"
+version_url = "https://www.centos.org/download/"
+
+[almalinux]
+version = "10.0"
+version_url = "https://endoflife.date/almalinux"
+
+[rockylinux]
+version = "10.0"
+version_url = "https://endoflife.date/rocky-linux"
+
+[freebsd]
+repo = "freebsd/freebsd-src"
+version = "14.2.0"
+
+[linuxmint]
+version = "22.1"
+version_url = "https://linuxmint.com/download.php"
+
+[opnsense]
+version = "25.1"
+version_url = "https://endoflife.date/opnsense"
