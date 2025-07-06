@@ -9,14 +9,6 @@ A Jenkins pipeline to monitor and report outdated software versions for applicat
 - [Overview](#overview)  
 - [Features](#features)  
 - [Prerequisites](#prerequisites)  
-- [Setup](#setup)  
-- [Configuration](#configuration)  
-- [Usage](#usage)  
-- [Pipeline Stages](#pipeline-stages)  
-- [Scripts and Files](#scripts-and-files)  
-- [Output](#output)  
-- [Contributing](#contributing)  
-- [License](#license)  
 
 ---
 
@@ -46,5 +38,3 @@ This project automates version monitoring for applications (APPS), operating sys
 - **Python Packages**:
   ```bash
   pip install toml requests packaging beautifulsoup4
-
-
